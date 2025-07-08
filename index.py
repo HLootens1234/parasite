@@ -10,9 +10,11 @@ displaySurface = pygame.display.set_mode((WINDOW_WIDTH,WINDOW_HEIGHT))
 pygame.display.set_caption("Parasite")
 
 button_images = [
-    pygame.image.load('assets/Heart1.png'),
-    pygame.image.load('assets/Heart2.png'),
-    pygame.image.load('assets/Heart3.png'),
+    pygame.image.load('assets/factory.png'),
+    pygame.image.load('assets/mushroom.png'),
+    pygame.image.load('assets/skull.png'),
+    pygame.image.load('assets/clock.png'),
+    pygame.image.load('assets/shh.png'),
 
 ]
 
@@ -30,7 +32,7 @@ class CircularButton:
 
 
 buttons = []
-for i in range(3):
+for i in range(5):
     x = WINDOW_WIDTH - BUTTON_RADIUS - 20
     y = (BUTTON_RADIUS + BUTTON_SPACING) * i + BUTTON_RADIUS + 40
     buttons.append(CircularButton(x, y, button_images[i]))
