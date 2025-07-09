@@ -1,0 +1,81 @@
+import pygame
+from config import *
+
+# Init
+pygame.init()
+clock = pygame.time.Clock()
+
+# Open window
+displaySurface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+pygame.display.set_caption("Parasite")
+
+# Load assets
+start_bg = pygame.image.load('assets/Parasite.png').convert()
+start_bg = pygame.transform.scale(start_bg, (WINDOW_WIDTH, WINDOW_HEIGHT))
+
+body_image = pygame.image.load('assets/body.png').convert_alpha()
+body_image = pygame.transform.scale(body_image, (WINDOW_WIDTH, WINDOW_HEIGHT))
+
+button_images = [
+    pygame.image.load('assets/factory.png'),
+    pygame.image.load('assets/mushroom.png'),
+    pygame.image.load('assets/skull.png'),
+    pygame.image.load('assets/clock.png'),
+    pygame.image.load('assets/shh.png'),
+]
+
+font = pygame.font.SysFont(None, 50)
+text = font.render('Press SPACE to start', True, (255, 255, 255))
+text_rect = text.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT - 100))
+
+# Scale button images
+for i in range(len(button_images)):
+    button_images[i] = pygame.transform.smoothscale(button_images[i], (BUTTON_RADIUS * 2, BUTTON_RADIUS * 2))
+
+# Button class
+class CircularButton:
+    def __init__(self, x, y, image):
+        self.image = image
+        self.rect = self.image.get_rect(center=(x, y))
+
+    def draw(self, surface):
+        pygame.draw.circle(surface, (80, 80, 80), self.rect.center, BUTTON_RADIUS)
+        surface.blit(self.image, self.rect)
+
+# Create buttons
+buttons = []
+for i in range(5):
+    x = WINDOW_WIDTH - BUTTON_RADIUS - 20
+    y = (BUTTON_RADIUS + BUTTON_SPACING) * i + BUTTON_RADIUS + 40
+    buttons.append(CircularButton(x, y, button_images[i]))
+
+# Game state
+gameStarted = False
+isGameRunning = True
+
+# Main game loop
+while isGameRunning:
+    displaySurface.fill((0, 0, 0))
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            isGameRunning = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                isGameRunning = False
+            elif not gameStarted and event.key == pygame.K_SPACE:
+                gameStarted = True
+
+    if not gameStarted:
+        displaySurface.blit(start_bg, (0, 0))
+        displaySurface.blit(text, text_rect)
+    else:
+        displaySurface.blit(body_image, (0, 0))
+        for button in buttons:
+            button.draw(displaySurface)
+
+    pygame.display.flip()
+    clock.tick(60)
+
+# Quit
+pygame.quit()
